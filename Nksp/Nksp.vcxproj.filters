@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{d52004e0-7884-4907-b36f-b33a88b62eab}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;rc;def;r;odl;idl;hpj;bat</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{807d78c5-9fcc-4095-b207-0b4103cb425a}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{449f5129-ce3b-44c8-9217-d556aaa64c37}</UniqueIdentifier>
+      <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
+    </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{a6f6473c-6f68-45a6-8a08-e92881f16c17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texts">
+      <UniqueIdentifier>{67044c71-a5d1-4c69-ac82-6734a3cf75d0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CmdLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GLSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Nksp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StdH.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VarList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CDCheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdLine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GLSettings.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Nksp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VarList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\cur_00.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_01.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_02.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_03.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_04.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_05.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_06.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_07.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_08.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_09.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\cur_10.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\lastwar.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Nksp.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="nocursor.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Splash.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SplashMask.bmp">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Nksp.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Nksp.exe.manifest" />
+  </ItemGroup>
+</Project>
