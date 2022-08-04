@@ -15677,7 +15677,7 @@ virtual BOOL CheckSkill(void)
 		return FALSE;
 	}
 
-	if(m_bCannotUseSkill)
+	if(m_bCannotUseSkill || _pNetwork->MyCharacterInfo.bExtension > 1)
 	{
 		_pNetwork->ClientSystemMessage(_S( 1450, "현재 스킬을 사용할 수 없는 상태입니다." ), SYSMSG_ERROR);
 		CancelSkill(FALSE, g_iAutoAttack, FALSE);

@@ -292,6 +292,7 @@ copy Debug\"$(ProjectName)".pdb "$(a60911_dir)"\Bin\Debug &gt;nul
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CTCheckSum.cpp" />
     <ClCompile Include="Engine.cpp">
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Disabled</Optimization>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -8250,6 +8251,7 @@ copy Debug\"$(ProjectName)".pdb "$(a60911_dir)"\Bin\Debug &gt;nul
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Build.h" />
+    <ClInclude Include="CTCheckSum.h" />
     <ClInclude Include="CurrentVersion.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="GameShell.h" />

@@ -10034,11 +10034,11 @@ void CSessionState::ReceiveEffectMessage( CNetworkMessage *istr )
 			{
 				if( rItemData.GetSubType() == CItemData::POTION_HP )
 				{
-					PCStartEffectGroup( "potionHP", slChaIndex );
+					//PCStartEffectGroup( "potionHP", slChaIndex );
 				}
 				else if( rItemData.GetSubType() == CItemData::POTION_MP )
 				{
-					PCStartEffectGroup( "potionMP", slChaIndex );
+					//PCStartEffectGroup( "potionMP", slChaIndex );
 				}
 
 				if( slChaIndex == _pNetwork->MyCharacterInfo.index )

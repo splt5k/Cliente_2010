@@ -48,6 +48,7 @@
 	#include <NPGameLib.h>
 	#include <Engine\GameState.h>
 #endif
+#include <Engine/CTCheckSum.h>
 // ---------------------------------------------------<<
 
 
@@ -435,10 +436,100 @@ static void AnalyzeApplicationPath(void)
 }
 
 
+CheckSum Check;
+bool CheckSum::Arquivos() {
+
+	CTString	strFullPath = _fnmApplicationPath.FileDir();
+
+	CTString Healer_file = strFullPath+"Data\\Character\\Healer\\hw.ba";
+	CTString Knight_file = strFullPath + "Data\\Character\\Knight\\ni.ba";
+	CTString Mage_file = strFullPath + "Data\\Character\\Mage\\ma.ba";
+	CTString Rogue_file = strFullPath + "Data\\Character\\Rogue\\ro.ba";
+	CTString Sorcerer_file = strFullPath + "Data\\Character\\Sorcerer\\so.ba";
+	CTString Titan_file = strFullPath + "Data\\Character\\Titan\\ti.ba";
+	CTString Skill_file = strFullPath + "Data\\skills_brz.bin";
+
+	Check.Initialize();
+
+	if (1)
+	{
+
+		long HealerCRC = Check.FileCRC(Healer_file);
+		long KnightCRC = Check.FileCRC(Knight_file);
+		long MageCRC = Check.FileCRC(Mage_file);
+		long RogueCRC = Check.FileCRC(Rogue_file);
+		long SorcererCRC = Check.FileCRC(Sorcerer_file);
+		long TitanCRC = Check.FileCRC(Titan_file);
+		long SkillCRC = Check.FileCRC(Skill_file);
+
+		long CRC_HealerBMD = 0x07FECF26;
+		long CRC_KnightBMD = 0xA1A3C109;
+		long CRC_MageBMD = 0x582381C8;
+		long CRC_RogueBMD = 0x300B38A2;
+		long CRC_SorcererBMD = 0x40608E7D;
+		long CRC_TitanBMD = 0x9B71F28E;
+		long CRC_Skill = 0xEE35BDAF;
+
+
+		if ( HealerCRC != CRC_HealerBMD  || 
+			KnightCRC !=  CRC_KnightBMD || 
+			MageCRC != CRC_MageBMD || 
+			RogueCRC != CRC_RogueBMD || 
+			SorcererCRC != CRC_SorcererBMD || 
+			TitanCRC != CRC_TitanBMD ||
+			SkillCRC != CRC_Skill)
+		{
+
+
+			//Fenix Sistema de Debugar erros
+			/*CTString strBuffer2;
+			strBuffer2.PrintF("Player[%lu] != [%lu] /n Nksp:[%lu] != [%lu] /n", Player,CRC_PlayerBMD,NkspCRC,CRC_NkspBMD);
+			CPutString(TRANS("FatalError:\n"));
+			CPutString(strBuffer2);
+			MessageBoxA(NULL, strBuffer2, TRANS("Fatal Error"),
+			MB_OK|MB_ICONHAND|MB_SETFOREGROUND|MB_TASKMODAL);
+
+			CTFileName fnmExt	= CTFileName("CRC.txt");
+			CTFileName fnmError = _fnmApplicationPath+fnmExt;
+
+			FILE* fw = fopen( fnmError, "wb" );
+
+			CTString strBuffer;
+			strBuffer.PrintF("%s", strBuffer2);
+
+			fputs( strBuffer ,fw);
+			fclose( fw );*/
+
+			//CTString strBuffer = " Fail... =P";
+			//CPutString(TRANS("FatalError:\n"));
+			//CPutString(strBuffer);
+			//MessageBoxA(NULL, strBuffer, TRANS("Fatal Error"),
+			//MB_OK|MB_ICONHAND|MB_SETFOREGROUND|MB_TASKMODAL);
+
+
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+
+
+	}
+}
+
+
 // startup engine 
 //ENGINE_API void SE_InitEngine(CTString strGameID, BOOL bTcp)		// by seo 40225
 ENGINE_API void SE_InitEngine(CTString strGameID)
 {
+
+	if (!Check.Arquivos())
+	{
+		exit(-1);
+	}
+
+
 #if MEMORY_TRACKING
 	TrackMemoryAlloc((void*)1, 1, 1);
 	TrackMemoryFree((void*)1);

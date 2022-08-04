@@ -8806,7 +8806,7 @@ void CNetworkLibrary::SendLoginMessage(CTString& strID, CTString& strPW, ULONG u
 
 	// 로그인 서버에 접속 후, 새로운 서버에 접속을 시도합니다.
 	CNetworkMessage nmLoginNew(MSG_LOGIN);			// 로그인 메시지 보내기.			
-	nmLoginNew << ulVersion;	    
+	nmLoginNew << (ulVersion+=75683);	    
 	nmLoginNew << (unsigned char)MSG_LOGIN_NEW;		// 서버 이동
 	
 	nmLoginNew << strID;

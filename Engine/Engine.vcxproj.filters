@@ -1417,6 +1417,9 @@
     <ClCompile Include="zlib\infutil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CTCheckSum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Base\Anim.h">
@@ -2719,6 +2722,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TransformInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTCheckSum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
