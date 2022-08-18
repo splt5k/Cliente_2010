@@ -806,6 +806,7 @@ void CUIRadar::RenderObjectLocation()
 	// Target
 	if( _pNetwork->_TargetInfo.bIsActive )
 	{
+		return; //Send Error FIX Dratan Guerra Maykom
 		// Get target
 		penObject = _pNetwork->_TargetInfo.pen_pEntity;
 
