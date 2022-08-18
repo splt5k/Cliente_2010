@@ -25,7 +25,13 @@ CPlayerTarget::CPlayerTarget(void) {
 /*
  *  Destructor.
  */
-CPlayerTarget::~CPlayerTarget(void) {
+CPlayerTarget::~CPlayerTarget(void) 
+{	
+	if (plt_penPlayerEntity != NULL)
+	{
+		plt_penPlayerEntity->Destroy(FALSE);
+		plt_penPlayerEntity = NULL;
+	}
 }
 
 //! 스트림으로부터 플레이어 정보를 읽는다.
