@@ -10622,9 +10622,15 @@ functions:
 					|| GetPlayerWeapons()->m_penRayHitTmp->GetRenderType() == RT_FIELDBRUSH)
 					&& GetPlayerWeapons()->m_bPickConditionOk)
 				{
-					ANGLE3D angle = GetEulerAngleFromDir(GetPlayerWeapons()->m_vRayHitSurfaceNormal);
-					m_pPickingEffectGroup = StartEffectGroup("Picking BSP"		//Hardcording
+				ANGLE3D angle = GetEulerAngleFromDir(GetPlayerWeapons()->m_vRayHitSurfaceNormal);
+					// WSS_WALLMOVE_BUGFIX 070531-------------------------------------->>
+					// ï¿½ï¿½ï¿½ 45ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ì½º ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½Ê°ï¿½ï¿½ï¿½
+					if( angle(2) < MAX_MOVE_SLOPE_GRADE )
+					{
+						m_pPickingEffectGroup = StartEffectGroup("Picking BSP"		//Hardcording
 						, _pTimer->GetLerpedCurrentTick(), m_vDesiredPosition, angle);
+					}
+					// ----------------------------------------------------------------<<
 				}
 			}
 //¾ÈÅÂÈÆ ¼öÁ¤ ³¡	//(5th Closed beta)(0.2)
@@ -10632,7 +10638,9 @@ functions:
 			_pInput->SetRMousePressed(FALSE);
 					
 			FLOAT3D vDelta = m_vDesiredPosition - GetPlacement().pl_PositionVector;
-			FLOAT	fLength = vDelta.Length();
+			FLOAT3D vDeltaTmp = vDelta;
+			//vDeltaTmp(2) = 0.0f;
+			FLOAT	fLength = vDeltaTmp.Length();
 
 			if(GetPlayerWeapons()->m_penRayHitTmp!=NULL && GetPlayerWeapons()->m_penRayHitTmp->GetFlags()&ENF_ALIVE && m_nDesiredSkillNum !=-1)
 			{
@@ -10795,8 +10803,14 @@ functions:
 					else if(penEnt->IsEnemy() || penEnt->IsPet() || penEnt->IsSlave())//¸ó½ºÅÍ¶ó¸é,
 					{
 						const int iJob = en_pcCharacter.pc_iPlayerType;
+						FLOAT fScaledSize = 0.0f;
+						FLOAT fAttackDistance = _pNetwork->MyCharacterInfo.attackrange;					
 
-						float fAttackDistance = _pNetwork->MyCharacterInfo.attackrange;						
+						if (penEnt->IsEnemy())
+						{
+							fScaledSize = _pNetwork->GetMobData( ((CEnemy*)penTarget)->m_nMobDBIndex ).GetScaledSize();
+							fAttackDistance += fScaledSize;
+						}
 
 						// °ø°ÝÁßÀÌ ¾Æ´Ï°í, ÇöÀç »ç¿ëÇÏ´Â ½ºÅ³ÀÌ ÀÖÀ»¶§?
 						if(!IsAttacking() && m_nCurrentSkillNum!=-1)
@@ -12493,15 +12507,21 @@ functions:
 							if(m_penAttackingEnemy->IsEnemy())
 							{
 								const INDEX iMobIndex = ((CEnemy*)((CEntity*)m_penAttackingEnemy))->m_nMobDBIndex;
+								FLOAT3D vDelta = GetPlacement().pl_PositionVector - m_penAttackingEnemy->GetPlacement().pl_PositionVector;
+								vDelta(2) = 0.0f; //ï¿½ì¼± ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
+								BOOL bAttack = CheckAttackTarget(-1, m_penAttackingEnemy, vDelta.Length());
 
-								// ¼ºÁÖÀÇ ±ÇÁÂÀÇ °æ¿ì ±æµåÀå¸¸ °ø°Ý °¡´É.
-								if( iMobIndex == LORD_SYMBOL_INDEX )
+								if (bAttack)
 								{
-									_pNetwork->SendAttackSymbol();
-								}
-								else
-								{
-									_pNetwork->SendAttackMessage(this, pen, FALSE);
+									// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½å¸¸ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+									if( iMobIndex == LORD_SYMBOL_INDEX )
+									{
+										_pNetwork->SendAttackSymbol();
+									}
+									else
+									{
+										_pNetwork->SendAttackMessage(this, pen, FALSE);
+									}
 								}
 							}
 							else
@@ -13344,15 +13364,21 @@ functions:
 					if(m_penAttackingEnemy->IsEnemy())
 					{
 						const INDEX iMobIndex = ((CEnemy*)((CEntity*)m_penAttackingEnemy))->m_nMobDBIndex;		
+						FLOAT3D vDelta = GetPlacement().pl_PositionVector - m_penAttackingEnemy->GetPlacement().pl_PositionVector;
+						vDelta(2) = 0.0f; //ï¿½ì¼± ï¿½ï¿½ï¿½Ì´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê´Â´ï¿½.
+						BOOL bAttack = CheckAttackTarget(-1, m_penAttackingEnemy, vDelta.Length());
 
-						// ¼ºÁÖÀÇ ±ÇÁÂÀÇ °æ¿ì ±æµåÀå¸¸ °ø°Ý °¡´É.
-						if( iMobIndex == LORD_SYMBOL_INDEX )
+						if (bAttack)
 						{
-							_pNetwork->SendAttackSymbol();
-						}
-						else
-						{
-							_pNetwork->SendAttackMessage(this, pen, FALSE);
+							// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½å¸¸ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+							if( iMobIndex == LORD_SYMBOL_INDEX )
+							{
+								_pNetwork->SendAttackSymbol();
+							}
+							else
+							{
+								_pNetwork->SendAttackMessage(this, pen, FALSE);
+							}
 						}
 					}
 					else
@@ -13715,7 +13741,7 @@ functions:
 			
 			//0625 kwon
 			//if (Abs(aHeadingRotation)<1.0f) {
-			if(Abs(aWantedHeadingRelative)<1.0f)
+			if(Abs(aWantedHeadingRelative)<=1.0f)
 			{
 				m_bFirstRotate = FALSE;
 				
@@ -13841,7 +13867,8 @@ functions:
 				m_nProductionNum = -1;
 
 				FLOAT3D vDelta = GetPlacement().pl_PositionVector - penTarget->GetPlacement().pl_PositionVector;
-				FLOAT fScaledSize = _pNetwork->GetMobData( ((CEnemy*)penTarget)->m_nMobDBIndex ).GetScaledSize();
+				vDelta(2) = 0.0f;
+                FLOAT fScaledSize = _pNetwork->GetMobData( ((CEnemy*)penTarget)->m_nMobDBIndex ).GetScaledSize();
 				
 				const int iJob = en_pcCharacter.pc_iPlayerType;
 
@@ -14164,7 +14191,8 @@ functions:
 				m_nProductionNum = -1;
 				
 				FLOAT3D vDelta = GetPlacement().pl_PositionVector - ((CCharacterBase*)penTarget)->GetPlacement().pl_PositionVector;
- 
+				vDelta(2) = 0.0f;
+
 				if(!IsPvp() && !_pUISWDoc->IsWar() && !IsLegitTarget(penTarget) && !(_pUIMgr->GetGuildBattle()->IsEnemy( penTarget->en_ulID )) //1203
 					&& !_pUIMgr->GetSiegeWarfareNew()->GetWarState() ) // WSS_DRATAN_SEIGEWARFARE 2007/08/30 µå¶óÅº °ø¼º Ãß°¡
 				{
@@ -14224,8 +14252,18 @@ functions:
 							
 							return TRUE;//m_vDesiredPositionÀ¸·Î.
 						}
-						else
+						else if( vDelta.Length() < 1.0f && !(m_bSkilling && m_bStartAttack) /*&& !m_bSendStopMessage*/ )
 						{
+							StopMove();						
+							//m_bClicked = false;
+							return FALSE;
+						}
+						// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ó°¡±ï¿½Ã¿ï¿½ Æ¯ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³ªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å´.
+						//  [9/4/2009 rumist]
+						else if( vDelta.Length() > 30.0f && !(m_bSkilling && m_bStartAttack) /*&& !m_bSendStopMessage*/ )
+						{
+							StopMove();
+							//m_bClicked = false;
 							return FALSE;
 						}
 
@@ -14320,6 +14358,7 @@ functions:
 				float fAttackDistance = _pNetwork->MyCharacterInfo.attackrange;								
 
 				FLOAT3D vDelta = GetPlacement().pl_PositionVector - penTarget->GetPlacement().pl_PositionVector;
+				vDelta(2) = 0.0f;
 				// FIXME : ÄÚµå Áßº¹ÀÌ ½ÉÇÔ.
 				if( vDelta.Length() < fAttackDistance && !IsAttacking() && m_nCurrentSkillNum==-1)
 				{
@@ -15021,7 +15060,7 @@ functions:
 			FLOAT num = length/plr_fSpeed;	
 
 			// ÇÑ¹ø¿¡ °¥¼ö ÀÖ´Â °Å¸®¶ó¸é...
-			if(num < 1.0f)
+			if(num <= 1.0f)
 			{
 				//ÀÌÀü¿¡ ¸Þ½ÃÁö º¸³¾¶§¿Í ºñ±³ÇØ¼­ 0.5º¸´Ù Àû°Ô °¬´Ù¸é,
 				FLOAT3D vDelta = GetPlacement().pl_PositionVector - m_vMyPositionTmp;
@@ -15834,6 +15873,8 @@ virtual BOOL CheckSkill(void)
 				}
 				//»çÁ¤°Å¸® Ã¼Å©
 				FLOAT3D vDelta = GetPlacement().pl_PositionVector - penTarget->GetPlacement().pl_PositionVector;		
+				vDelta(2) = 0.0f;
+
 				FLOAT3D vTargetPos(0, 0, 0);
 				FLOAT3D vDirection(0, 0, 0);
 
@@ -16696,9 +16737,13 @@ void SkillAnimation(void)
 						
 						if(penTarget->en_pmiModelInstance != NULL)
 						{
-							StartEffectGroup(skill.GetFireEffect3(_pNetwork->MyCharacterInfo.bExtension)
-								, &penTarget->en_pmiModelInstance->m_tmSkaTagManager
-								, _pTimer->GetLerpedCurrentTick());
+							// Terrainï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+							if (penTarget->GetRenderType() != RT_TERRAIN)
+							{
+								StartEffectGroup(skill.GetFireEffect3(_pNetwork->MyCharacterInfo.bExtension)
+									, &penTarget->en_pmiModelInstance->m_tmSkaTagManager
+									, _pTimer->GetLerpedCurrentTick());
+							}
 						}
 					}
 				}					

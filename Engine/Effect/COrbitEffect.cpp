@@ -63,8 +63,7 @@ void COrbitEffect::Start(FLOAT time, BOOL restart)
 	for(INDEX i=0; i<cnt; ++i)
 	{
 		if(m_vectorOrbit[i].strEffectName == m_strName) continue;
-		CEffect *pEffect = 
-			CEffectManager::Instance().Create(m_vectorOrbit[i].strEffectName);
+		CEffect *pEffect = CEffectManager::Instance().Create(m_vectorOrbit[i].strEffectName);
 		if(pEffect == NULL) continue;
 		m_vectorEffect.push_back( pEffect );
 		tag_ptr ptrTag(new CWorldTag);

@@ -61,15 +61,18 @@ functions:
   /* Adjust model mip factor if needed. */
   void AdjustMipFactor(FLOAT &fMipFactor)
   {
-    // adjust flare glow, to decrease power with how you get closer
-    CAttachmentModelObject *pamo = GetModelObject()->GetAttachmentModel(ITEMHOLDER_ATTACHMENT_FLARE);
-    if( pamo != NULL)
-    {
-      FLOAT fRatio = (Clamp( fMipFactor, 5.0f, 7.0f)-5.0f)/2.0f;
-      UBYTE ubRatio = UBYTE(255*fRatio);
-      COLOR colMutiply = RGBToColor(ubRatio,ubRatio,ubRatio)|CT_OPAQUE;
-      pamo->amo_moModelObject.mo_colBlendColor = colMutiply;
-    }
+	  if (en_RenderType == CEntity::RT_MODEL)
+	  {
+			// adjust flare glow, to decrease power with how you get closer
+			CAttachmentModelObject *pamo = GetModelObject()->GetAttachmentModel(ITEMHOLDER_ATTACHMENT_FLARE);
+			if( pamo != NULL)
+			{
+			  FLOAT fRatio = (Clamp( fMipFactor, 5.0f, 7.0f)-5.0f)/2.0f;
+			  UBYTE ubRatio = UBYTE(255*fRatio);
+			  COLOR colMutiply = RGBToColor(ubRatio,ubRatio,ubRatio)|CT_OPAQUE;
+			  pamo->amo_moModelObject.mo_colBlendColor = colMutiply;
+			}
+	  }
 
     // if never picked
     if (m_ulPickedMask==0) {

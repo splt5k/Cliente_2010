@@ -576,7 +576,7 @@ functions:
 			}			
 		}
 		
-		//CEnemyBase::ReceiveDamage(penInflictor, dmtType, fDamageAmmount, vHitPoint, vDirection);
+		CEnemyBase::ReceiveDamage(penInflictor, dmtType, fDamageAmmount, vHitPoint, vDirection);
 	};
 
 	//--------------------------------------------------------------

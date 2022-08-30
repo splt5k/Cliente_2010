@@ -1123,6 +1123,7 @@ void Particles_RocketTrail_Prepare(CEntity *pen)
 }
 void Particles_RocketTrail(CEntity *pen, FLOAT fStretch)
 {
+	INDEX iPos;
 	CLastPositions *plp = pen->GetLastPositions(ROCKET_TRAIL_POSITIONS);
 	FLOAT fSeconds = _pTimer->GetLerpedCurrentTick();
 	
@@ -1133,8 +1134,7 @@ void Particles_RocketTrail(CEntity *pen, FLOAT fStretch)
 	const FLOAT3D *pvPos2 = &plp->GetPosition(1);
 	INDEX iParticle = 0;
 	INDEX iParticlesLiving = plp->lp_ctUsed*ROCKET_TRAIL_INTERPOSITIONS;
-	INDEX iPos;
-	for( INDEX iPos=2; iPos<plp->lp_ctUsed; iPos++)
+	for( iPos=2; iPos<plp->lp_ctUsed; iPos++)
 	{
 		pvPos1 = pvPos2;
 		pvPos2 = &plp->GetPosition(iPos);
@@ -1828,7 +1828,7 @@ void Particles_Stardust( CEntity *pen, FLOAT fSize, FLOAT fHeight,
 	INDEX ctOffsetSpace = 128;
 
 	ASSERT( (ctParticles+ctOffsetSpace)<=CT_MAX_PARTICLES_TABLE);
-	if( Particle_GetMipFactor()>7.0f) return;
+	//if( Particle_GetMipFactor()>7.0f) return;
 
 	FLOAT fNow = _pTimer->GetLerpedCurrentTick();
 	SetupParticleTexture( ptTexture);
@@ -6022,6 +6022,8 @@ void Particles_ModelGlow2( CModelObject *mo, CPlacement3D pl, FLOAT tmEnd, enum 
 	Particle_Flush();
 }
 
+#define DEF_AFTER_BURN_POS_GAP	0.2f
+
 void Particles_RunAfterBurner(CEntity *pen, FLOAT tmEnd, FLOAT fStretch, INDEX iGradientType)
 {
 	FLOAT3D vGDir = ((CMovableEntity *)pen)->en_vGravityDir;
@@ -6090,7 +6092,9 @@ void Particles_RunAfterBurner(CEntity *pen, FLOAT tmEnd, FLOAT fStretch, INDEX i
 	{
 		pvPos1 = pvPos2;
 		pvPos2 = &plp->GetPosition(iPos);
-		if( *pvPos1==*pvPos2) continue;
+		
+		if ((*pvPos1 - *pvPos2).Length() <= DEF_AFTER_BURN_POS_GAP)
+			continue;
 
 		FLOAT fT=(iPos+_pTimer->GetLerpFactor())*_pTimer->TickQuantum;
 		FLOAT fRatio=fT/(CT_AFTERBURNER_SMOKES*_pTimer->TickQuantum);
@@ -6137,7 +6141,9 @@ void Particles_RunAfterBurner(CEntity *pen, FLOAT tmEnd, FLOAT fStretch, INDEX i
 	{
 		pvPos2 = pvPos1;
 		pvPos1 = &plp->GetPosition(iFlare);
-		if( *pvPos1==*pvPos2) continue;
+		
+		if ((*pvPos1 - *pvPos2).Length() <= DEF_AFTER_BURN_POS_GAP)
+			continue;
 
 		for (INDEX iInter=CT_AFTERBURNER_HEAD_INTERPOSITIONS-1; iInter>=0; iInter--)
 		{
