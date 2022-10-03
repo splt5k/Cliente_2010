@@ -25,25 +25,30 @@
     <SccLocalPath>
     </SccLocalPath>
     <ProjectGuid>{9AF44274-E652-E831-DCD5-C75D8E09B3F9}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FinalRelease|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='FinalDebug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -77,7 +82,7 @@
     <PostBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PostBuildEventUseInBuild>
     <PreBuildEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</PreLinkEventUseInBuild>
-    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='FinalDebug|Win32'">.\FinalDebug\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='FinalDebug|Win32'">.\FinalDebug\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='FinalDebug|Win32'">false</LinkIncremental>
@@ -85,9 +90,7 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='FinalRelease|Win32'">.\FinalRelease\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='FinalRelease|Win32'">false</LinkIncremental>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(ENGINE_DIR)\</OutDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
@@ -139,26 +142,21 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <PreprocessorDefinitions>FINALVERSION;NDEBUG;_WINDOWS;ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>StdH.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile>$(IntDir)Engine.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
-      <ObjectFileName>$(IntDir)</ObjectFileName>
-      <ProgramDataBaseFileName>$(IntDir)</ProgramDataBaseFileName>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>./;../;../include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <OmitFramePointers>false</OmitFramePointers>
       <OpenMPSupport>true</OpenMPSupport>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <AdditionalDependencies>lua5.1.lib;tinyxml.lib;wininet.lib;odbc32.lib;odbccp32.lib;OpenAES.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -166,15 +164,11 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LargeAddressAware>true</LargeAddressAware>
-      <ImportLibrary>$(OutDir)$(TargetName).lib</ImportLibrary>
       <IgnoreSpecificDefaultLibraries>msvcrtd.lib;libci.lib;LIBCMT.lib;libc.lib;;libcp.lib%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>..\lib\VC100;Lua;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>.\Engine.def</ModuleDefinitionFile>
       <SubSystem>Console</SubSystem>
-      <OptimizeReferences>false</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
-      <ProgramDatabaseFile>$(TargetDir)$(TargetName)_vc100.pdb</ProgramDatabaseFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

@@ -3,6 +3,7 @@
 
 #include <Engine/Interface/UIGroup.h>
 #include <Engine/Interface/UITextureManager.h>
+#include <functional>
 #include <algorithm>
 // Definition
 #define GROUP_NAME_OFFSET_X 18	
