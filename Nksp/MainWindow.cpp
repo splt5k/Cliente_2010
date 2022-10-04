@@ -9,6 +9,11 @@
 #include "resource.h"
 #include "CmdLine.h"
 #include "Engine/GameState.h"
+#include <Engine/Interface/UIManager.h>
+
+#include <Engine/Interface/UIInternalClasses.h>
+#include <Engine/Graphics/ViewPort.h>
+#include <Engine/LocalDefine.h>
 
 extern PIX _pixDesktopWidth;
 extern PIX _pixDesktopHeight;
@@ -29,6 +34,9 @@ static BITMAP  _bmSplash;
 static PIX _pixLastSizeI, _pixLastSizeJ;
 
 BOOL _bIMEProc = false; // 이기환 수정 11.12
+
+//	±è¿µÈ¯:
+bool	_bWinSize = false;
 
 // window procedure active while window changes are occuring
 long FAR PASCAL WindowProc_WindowChanging( HWND hWnd, UINT message, 
@@ -84,46 +92,46 @@ long FAR PASCAL WindowProc_WindowChanging( HWND hWnd, UINT message,
 long FAR PASCAL WindowProc_Normal( HWND hWnd, UINT message, 
 			    WPARAM wParam, LPARAM lParam )
 {
-	switch( message ) {
+	switch (message) {
 
 	case WM_POWERBROADCAST:
+	{
+		//			delete _pTimer;
+		//			_pTimer = new CTimer;
+		if (wParam == PBT_APMQUERYSUSPEND)
+			return BROADCAST_QUERY_DENY;
+		else if (wParam == PBT_APMBATTERYLOW)
 		{
-//			delete _pTimer;
-//			_pTimer = new CTimer;
-			if ( wParam == PBT_APMQUERYSUSPEND )
-				return BROADCAST_QUERY_DENY;
-			else if ( wParam == PBT_APMBATTERYLOW )
-			{
-				MessageBox(NULL,"Battery power is low","Warning!",MB_OK);
-			}
-			return true;
-		} break;
+			MessageBox(NULL, "Battery power is low", "Warning!", MB_OK);
+		}
+		return true;
+	} break;
 	// system commands
 	case WM_SYSCOMMAND: {
-		switch( wParam & ~0x0F) {
-		// window resizing messages
+		switch (wParam & ~0x0F) {
+			// window resizing messages
 		case SC_MINIMIZE:
 		case SC_RESTORE:
 		case SC_MAXIMIZE:
 			// relay to application
-		  PostMessage(NULL, message, wParam & ~0x0F, lParam);
+			PostMessage(NULL, message, wParam & ~0x0F, lParam);
 			// do not allow automatic resizing
 			return 0;
 			break;
-		// prevent screen saver and monitor power down
+			// prevent screen saver and monitor power down
 		case SC_SCREENSAVE:
 		case SC_MONITORPOWER:
 			return 0;
 		}
-											} break;
-	// when close box is clicked
+	} break;
+		// when close box is clicked
 	case WM_CLOSE:
 		// relay to application
 		PostMessage(NULL, message, wParam, lParam);
 		// do not pass to default wndproc
 		return 0;
 
-	// some standard focus loose/gain messages
+		// some standard focus loose/gain messages
 	case WM_LBUTTONUP:
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
@@ -140,6 +148,109 @@ long FAR PASCAL WindowProc_Normal( HWND hWnd, UINT message,
 		PostMessage(NULL, message, wParam, lParam);
 		// pass to default wndproc
 		break;
+	case WM_EXITSIZEMOVE:
+	{
+		if ((sam_bFullScreenActive != 1) && (_bWinSize))
+		{
+			//	À©µµ¿ì ¸ðµå¿¡¼­ Å©±â º¯°æÀÌ ¹ß»ýÇÑnks °æ¿ì¿¡¸¸,
+			_bWinSize = false;
+
+			RECT	t_Rect;
+			GetClientRect(_hwndMain, &t_Rect);
+			long t_Width = t_Rect.right - t_Rect.left;
+			long t_Height = t_Rect.bottom - t_Rect.top;
+
+			sam_iScreenSizeI = t_Width;
+			sam_iScreenSizeJ = t_Height;
+
+			// mark to start ignoring window size/position messages until settled down
+			_bWindowChanging = TRUE;
+
+			// destroy canvas if existing
+			_pUIMgr->GetGame()->DisableLoadingHook();
+			if (_pvpViewPortMain != NULL)
+			{
+				_pGfx->DestroyWindowCanvas(_pvpViewPortMain);
+				_pvpViewPortMain = NULL;
+				_pdpNormalMain = NULL;
+			}
+
+			// create canvas
+			ASSERT(_pvpViewPortMain == NULL);
+			ASSERT(_pdpNormalMain == NULL);
+			_pGfx->CreateWindowCanvas(_hwndMain, &_pvpViewPortMain, &_pdpNormalMain);
+
+			// erase context of both buffers (for the sake of wide-screen)
+			_pdpMain = _pdpNormalMain;
+			if (_pdpMain != NULL && _pdpMain->Lock()) {
+				_pdpMain->Fill(C_BLACK | CT_OPAQUE);
+				_pdpMain->Unlock();
+				_pvpViewPortMain->SwapBuffers();
+				_pdpMain->Lock();
+				_pdpMain->Fill(C_BLACK | CT_OPAQUE);
+				_pdpMain->Unlock();
+				_pvpViewPortMain->SwapBuffers();
+			}
+
+			// lets try some wide screen screaming :)
+			const PIX pixYBegAdj = _pdpMain->GetHeight() * 21 / 24;
+			const PIX pixYEndAdj = _pdpMain->GetHeight() * 3 / 24;
+			const PIX pixXEnd = _pdpMain->GetWidth();
+
+			// initial screen fill and swap, just to get context running
+			BOOL bSuccess = FALSE;
+			if (_pdpMain != NULL && _pdpMain->Lock())
+			{
+				//pdp->Fill( LCDGetColor( C_dGREEN|CT_OPAQUE, "bcg fill"));
+				_pdpMain->Fill(C_BLACK | CT_OPAQUE);
+				_pdpMain->Unlock();
+				_pvpViewPortMain->SwapBuffers();
+				bSuccess = TRUE;
+			}
+
+			_pUIMgr->GetGame()->EnableLoadingHook(_pdpMain);
+
+			// if the mode is not working, or is not accelerated
+			if (!bSuccess || !_pGfx->IsCurrentModeAccelerated())
+			{ // report error
+#ifdef _DEBUG
+				CPrintF(TRANS("This mode does not support hardware acceleration.\n"));
+#endif
+				// destroy canvas if existing
+				if (_pvpViewPortMain != NULL) {
+					_pUIMgr->GetGame()->DisableLoadingHook();
+					_pGfx->DestroyWindowCanvas(_pvpViewPortMain);
+					_pvpViewPortMain = NULL;
+					_pdpNormalMain = NULL;
+				}
+				// close the application window
+				CloseMainWindow();
+				// report failure
+				return FALSE;
+			}
+
+	
+			// Adjust position of UIs
+			_pUIMgr->AdjustUIPos(_pdpMain);
+
+			// Date : 2005-09-22(오후 8:26:30), By Lee Ki-hwan
+			// 타이틀 바 재 설졍 
+			_pUIMgr->SetTitleName(sam_bFullScreenActive, sam_iScreenSizeI, sam_iScreenSizeJ);
+		}
+		break;
+	}
+	case WM_SIZE:
+		{
+			//	±è¿µÈ¯ : À©µµ¿ì Ã¢ Å©±â º¯°æÀÌ ¹ß»ýÇÑ °æ¿ì º¯¼ö ¼³Á¤.
+			_bWinSize = true;
+			break;
+		}
+	case WM_GETMINMAXINFO:
+	{
+		(reinterpret_cast<MINMAXINFO*>(lParam))->ptMaxTrackSize.x = 2200;
+		(reinterpret_cast<MINMAXINFO*>(lParam))->ptMaxTrackSize.y = 1500;
+	}
+	break;
 	}
 
 	// if we get to here, we pass the message to default procedure
@@ -247,7 +358,7 @@ void OpenMainWindowNormal( PIX pixSizeI, PIX pixSizeJ)
 	  WS_EX_APPWINDOW,
 	  APPLICATION_NAME,
 	  "",   // title
-		WS_OVERLAPPED|WS_CAPTION|WS_MINIMIZEBOX|WS_SYSMENU,
+		WS_OVERLAPPEDWINDOW | WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU | WS_THICKFRAME | WS_SIZEBOX,
 	  10,10,
 	  100,100,  // window size
 	  NULL,

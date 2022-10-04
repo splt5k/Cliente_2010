@@ -62,15 +62,12 @@ extern CGame		*_pGame = NULL;
 
 
 static PIX _apixRes[][2] = {	 
-	640, 480,	 
-		800, 500,
 		800, 600,	 
 		1024, 768,
-		1152, 864,	
-		1280, 800,
-		1280, 960,	
-		1280, 1024,
-		1600,1200,    	
+		1280, 720,	
+		1366, 768,
+		1600, 900,	
+		1920, 1080,
 };
 
 // helper for limiting window size when changing mode out of full screen
@@ -1851,13 +1848,13 @@ int SubMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int 
 					break;
 					// if should maximize
 				case SC_MAXIMIZE:
-					if( _bWindowChanging) break;
-					_bWindowChanging  = TRUE;
-					//_bReconsiderInput = TRUE;
-					// go to full screen
-					StartNewMode( (GfxAPIType)sam_iGfxAPI, sam_iDisplayAdapter, sam_iScreenSizeI, sam_iScreenSizeJ,
-						(enum DisplayDepth)sam_iDisplayDepth, TRUE);
-					ShowWindow( _hwndMain, SW_SHOWNORMAL);
+					//if( _bWindowChanging) break;
+					//_bWindowChanging  = TRUE;
+					////_bReconsiderInput = TRUE;
+					//// go to full screen
+					//StartNewMode( (GfxAPIType)sam_iGfxAPI, sam_iDisplayAdapter, _pixDesktopWidth, _pixDesktopHeight,
+					//	(enum DisplayDepth)sam_iDisplayDepth, TRUE);
+					//ShowWindow( _hwndMain, SW_SHOWNORMAL);
 					break;
 				}
 			}

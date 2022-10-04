@@ -64,20 +64,12 @@ public:
 };*/
 static CResolution _areResolutions[] =
 {  
-  {  640,  480 }, 
-  {  800,  500 },
-  {  800,  600 },  
-  { 1024,  768 },
-  { 1152,  864 },
-  { 1280,  720 },
-  { 1280,  800 },
-  { 1280,  960 },
-  { 1280, 1024 },	// wide screen
-  { 1440, 900  },
-  { 1600, 900  },
-  { 1600, 1200 },   
-  { 1680, 1050  },	// wide screen
-  { 1920, 1200  },	// wide screen	//  [7/2/2010 rumist]
+    {   800, 600    },
+    {   1024, 768   },
+    {   1280, 720   },
+    {   1366, 768   },
+    {   1600, 900   },
+    {   1920, 1080  },
 };
 // THIS NUMBER MUST NOT BE OVER 25! (otherwise change it in adapter.h)
 static const INDEX MAX_RESOLUTIONS = sizeof(_areResolutions)/sizeof(_areResolutions[0]);
